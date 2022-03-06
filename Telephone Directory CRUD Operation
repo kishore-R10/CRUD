@@ -1,0 +1,58 @@
+import pymongo
+
+from pymongo import MongoClient
+
+client =pymongo.MongoClient("mongodb+srv://black:7200290567@cluster0.wwmy8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+db=client.contacts
+
+
+records = db.contacts_coll
+
+print("1.create contact  ")
+print("2.search contact  ")
+print("3.update contact  ")
+print("4.delete contact  ")
+
+n = int(input())
+if n == 1:
+  a=str(input("enter ur name  "))
+  b=int(input("enter ur mobile no  "))
+  c=str(input("place  "))
+  x = {"name":a,"mobile no":b,"place":c}
+  records.insert_one(x)
+
+if n == 2:
+  a = input()
+  for x in records.find({"name":a},{"_id":0,"mobile no":1,"name":1,"place":1}):
+    print(x)
+  
+
+if n == 3:
+  db = client.get_database('contacts')
+  records = db.contacts_coll
+
+  for x in records.find():
+   print(x)
+
+
+  print("enter the field u want to change") 
+
+  
+  a = str(input("name or number or location"))
+  x = input("old")
+  y = input("new")
+  myquery = { a:x}
+  newvalue={"$set":{a:y}}
+
+  records.update_one(myquery,newvalue)
+
+
+if n == 4:
+    db = client.get_database('contacts')
+    records = db.contacts_coll
+
+    for x in records.find():
+     print(x)
+    l=input("enter the name")
+    todel = {"name":l}
+    records.delete_one(todel)
